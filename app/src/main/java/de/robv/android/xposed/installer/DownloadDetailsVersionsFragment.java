@@ -224,24 +224,14 @@ public class DownloadDetailsVersionsFragment extends ListFragment {
             holder.downloadView.setTitle(mActivity.getModule().name);
             holder.downloadView.setDownloadFinishedCallback(new DownloadModuleCallback(item));
 
-            if (item.changelog != null && !item.changelog.isEmpty()) {
-                holder.txtChangesTitle.setVisibility(View.VISIBLE);
-                holder.txtChanges.setVisibility(View.VISIBLE);
-
-                if (item.changelogIsHtml) {
-                    holder.txtChanges.setText(RepoParser.parseSimpleHtml(getActivity(), item.changelog, holder.txtChanges));
-                    holder.txtChanges.setTransformationMethod(new LinkTransformationMethod(getActivity()));
-                    holder.txtChanges.setMovementMethod(LinkMovementMethod.getInstance());
-                } else {
-                    holder.txtChanges.setText(item.changelog);
-                    holder.txtChanges.setMovementMethod(null);
-                }
-
-            } else {
-                holder.txtChangesTitle.setVisibility(View.GONE);
-                holder.txtChanges.setVisibility(View.GONE);
+            if (item.changelog == null) {
+                item.changelog = "";
             }
-
+            holder.txtChangesTitle.setVisibility(View.VISIBLE);
+            holder.txtChanges.setVisibility(View.VISIBLE);
+            holder.txtChanges.setText(RepoParser.parseSimpleHtml(DownloadDetailsVersionsFragment.this.getActivity(), item.changelog + "<br/>" + ("<a href=\"" + item.downloadLink + "\">" + item.downloadLink + "<a>"), holder.txtChanges));
+            holder.txtChanges.setTransformationMethod(new LinkTransformationMethod(DownloadDetailsVersionsFragment.this.getActivity()));
+            holder.txtChanges.setMovementMethod(LinkMovementMethod.getInstance());
             return view;
         }
     }
